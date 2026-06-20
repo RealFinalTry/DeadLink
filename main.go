@@ -29,7 +29,7 @@ func main() {
 	content := string(data)
 
 	
-	re := regexp.MustCompile(`\[.*?\]\((https?://[^\s)]+)\)`)
+	re := regexp.MustCompile(`https?://[^\s)]+`)
 	links := re.FindAllStringSubmatch(content,-1)
 
 	for _,link := range links {
