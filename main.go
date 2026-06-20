@@ -4,9 +4,13 @@ import (
 	"os"
 	"net/http"
 	"regexp"
+	"time"
 )
 func check(url string) int {
-    resp, err := http.Get(url)
+	client := http.Client{
+		Timeout : 10 * time.Second,
+	}
+	resp, err := http.Get(url)
     if err != nil {
         return 0 
     }
