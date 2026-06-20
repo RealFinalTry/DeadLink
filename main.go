@@ -5,12 +5,16 @@ import (
 	"net/http"
 	"regexp"
 	"time"
+	"strings"
 )
 func check(url string) int {
 	client := http.Client{
 		Timeout : 10 * time.Second,
 	}
-	resp, err := http.Get(url)
+	if !strings.HasPrefix(url, "http") {
+    url = "https://" + url
+    }
+	resp, err := client.Get(url)
     if err != nil {
         return 0 
     }
@@ -33,11 +37,12 @@ func main() {
 	content := string(data)
 
 	
-	re := regexp.MustCompile(`https?://[^\s)]+`)
-	links := re.FindAllStringSubmatch(content,-1)
+	urlPattern := `(?:https?://)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&/=]*)`
+	re := regexp.MustCompile(urlPattern)
+	links := re.FindAllString(content,-1)
 
 	for _,link := range links {
-		url := link[1]
+		url := link
                 code := check(url)
 		if code == 200 {
                 	alive++
