@@ -46,6 +46,10 @@ func main() {
         re := regexp.MustCompile(urlPattern)
         links := re.FindAllString(content,-1)
         cd := make(chan Result)
+        if len(links) == 0 {
+                fmt.Println("not foud links!")
+                return
+        }
         for _,link := range links {
                 url := link
                 go check(url,cd)
@@ -66,6 +70,6 @@ func main() {
                         fmt.Println("error :", result.URL,"\n-----")
                 }
         }
-        total := alive + dead + forbidden
+        total := len(links)
         fmt.Printf("Total: %d | Alive: %d | Dead: %d | Forbidden: %d\n", total, alive, dead, forbidden)
 }
